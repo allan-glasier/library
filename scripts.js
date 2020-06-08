@@ -6,37 +6,37 @@ let myLibrary = [
     title: "Gone Girl",
     author: "Gillian Flynn",
     pages: 432,
-    read: false,
+    read: "No",
   },
   {
     title: "The Subtle Art of Not Giving a F*ck",
     author: "Mark Manson",
     pages: 224,
-    read: true,
+    read: "Yes",
   },
   {
     title: "The Pragmatic Programmer",
     author: "Andy Hunt & Dave Thomas",
     pages: 320,
-    read: false,
+    read: "No",
   },
   {
     title: "Lady of the Lake",
     author: "Andrzej Sapkowski",
     pages: 544,
-    read: false,
+    read: "No",
   },
   {
     title: "A Dance with Dragons",
     author: "George R. R. Martin",
     pages: 1016,
-    read: false,
+    read: "No",
   },
   {
     title: "American Dirt",
     author: "Jeanine Cummins",
     pages: 387,
-    read: false,
+    read: "Np",
   },
 ];
 
@@ -54,10 +54,9 @@ function addBook() {
   let read = prompt("Have you read the book? ([Y]es or [N]o)");
 
   if (read.toLowerCase() === "yes" || read.toLowerCase() === "y") {
-    read = true;
+    read = "Yes";
   } else {
-    console.log(read);
-    read = false;
+    read = "No";
   }
 
   myLibrary.push(new Book(title, author, pages, read));
@@ -65,6 +64,12 @@ function addBook() {
 
 function removeBook(index) {
   myLibrary.splice(index, 1);
+}
+
+function readBook(index) {
+  myLibrary[index].read === "Yes"
+    ? (myLibrary[index].read = "No")
+    : (myLibrary[index].read = "Yes");
 }
 
 function render() {
@@ -91,6 +96,9 @@ function render() {
 
     const bookRead = document.createElement("p");
     bookRead.className = "card-text";
+    bookRead.id = "read-book";
+    bookRead.dataset.index = `${i}`;
+    bookRead.setAttribute("role", "button");
     bookRead.innerHTML = `Have read: ${book.read}`;
 
     const removeBtn = document.createElement("a");
@@ -102,6 +110,11 @@ function render() {
     removeBtn.addEventListener("click", (e) => {
       e.preventDefault();
       removeBook(e.target.dataset.index);
+      render();
+    });
+
+    bookRead.addEventListener("click", (e) => {
+      readBook(e.target.dataset.index);
       render();
     });
 
