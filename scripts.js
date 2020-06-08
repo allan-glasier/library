@@ -63,35 +63,55 @@ function addBook() {
   myLibrary.push(new Book(title, author, pages, read));
 }
 
-function removeBook() {}
+function removeBook(index) {
+  myLibrary.splice(index, 1);
+}
 
 function render() {
   books.innerHTML = "";
 
   myLibrary.forEach((book, i) => {
-    const div = document.createElement("div");
-    books.innerHTML += `
-    <div class="card text-white bg-dark mb-3">
-      <h5 class="card-header text-center">${book.title}</h5>
-      <div class="card-body">
-        <p class="card-text">Author: ${book.author}</p>
-        <p class="card-text">Pages: ${book.pages}</p>
-        <p class="card-text">Have read: ${book.read}</p>
-        <a href="#" class="btn btn-danger" id="remove-book" data-index=${i}>
-          Remove Book
-        </a>
-      </div>
-    </div>
-    `;
+    const card = document.createElement("div");
+    card.classList.add("card", "text-white", "bg-dark", "mb-3");
 
-    const removeBookBtn = document.querySelector("#remove-book");
+    const bookTitle = document.createElement("h5");
+    bookTitle.classList.add("card-header", "text-center");
+    bookTitle.innerHTML = `${book.title}`;
 
-    removeBookBtn.addEventListener("click", (e) => {
+    const cardBody = document.createElement("div");
+    cardBody.className = "card-body";
+
+    const bookAuthor = document.createElement("p");
+    bookAuthor.className = "card-text";
+    bookAuthor.innerHTML = `Author: ${book.author}`;
+
+    const bookPages = document.createElement("p");
+    bookPages.className = "card-text";
+    bookPages.innerHTML = `Pages: ${book.pages}`;
+
+    const bookRead = document.createElement("p");
+    bookRead.className = "card-text";
+    bookRead.innerHTML = `Have read: ${book.read}`;
+
+    const removeBtn = document.createElement("a");
+    removeBtn.classList.add("btn", "btn-danger");
+    removeBtn.id = "remove-book";
+    removeBtn.dataset.index = `${i}`;
+    removeBtn.innerHTML = "Remove Book";
+
+    removeBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      console.log(e.target.dataset.index);
-      // addBook();
-      // render();
+      removeBook(e.target.dataset.index);
+      render();
     });
+
+    card.appendChild(bookTitle);
+    card.appendChild(cardBody);
+    cardBody.appendChild(bookAuthor);
+    cardBody.appendChild(bookPages);
+    cardBody.appendChild(bookRead);
+    cardBody.appendChild(removeBtn);
+    books.appendChild(card);
   });
 }
 
