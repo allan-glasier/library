@@ -1,6 +1,7 @@
 const books = document.querySelector("#books");
 const addBookBtn = document.querySelector("#add-book");
 
+// Books to be shown by default on page load
 let myLibrary = [
   {
     title: "Gone Girl",
@@ -40,6 +41,7 @@ let myLibrary = [
   },
 ];
 
+// Book constructor
 function Book(title, author, pages, read) {
   this.title = title;
   this.author = author;
@@ -47,6 +49,7 @@ function Book(title, author, pages, read) {
   this.read = read;
 }
 
+// add a book to the myLibrary array
 function addBook() {
   const title = prompt("What is the title of the book?");
   const author = prompt("Who is the author of the book?");
@@ -62,19 +65,24 @@ function addBook() {
   myLibrary.push(new Book(title, author, pages, read));
 }
 
+// remove a book from the myLibrary array
 function removeBook(index) {
   myLibrary.splice(index, 1);
 }
 
+// toggle read status of a book
 function readBook(index) {
   myLibrary[index].read === "Yes"
     ? (myLibrary[index].read = "No")
     : (myLibrary[index].read = "Yes");
 }
 
+// Display books on screen
 function render() {
+  // clear screen to prevent duplcate data
   books.innerHTML = "";
 
+  // Loop over each book writing the data to the screen
   myLibrary.forEach((book, i) => {
     const card = document.createElement("div");
     card.classList.add("card", "text-white", "bg-dark", "mb-3");
@@ -94,6 +102,7 @@ function render() {
     bookPages.className = "card-text";
     bookPages.innerHTML = `Pages: ${book.pages}`;
 
+    // id and dataset to use with event listener
     const bookRead = document.createElement("p");
     bookRead.className = "card-text";
     bookRead.id = "read-book";
@@ -101,18 +110,21 @@ function render() {
     bookRead.setAttribute("role", "button");
     bookRead.innerHTML = `Have read: ${book.read}`;
 
+    // id and dataset to use with event listener
     const removeBtn = document.createElement("a");
     removeBtn.classList.add("btn", "btn-danger");
     removeBtn.id = "remove-book";
     removeBtn.dataset.index = `${i}`;
     removeBtn.innerHTML = "Remove Book";
 
+    // when delete button is clicked run removeBook function and render the page
     removeBtn.addEventListener("click", (e) => {
       e.preventDefault();
       removeBook(e.target.dataset.index);
       render();
     });
 
+    // when read status is clicked run readBook function and render the page
     bookRead.addEventListener("click", (e) => {
       readBook(e.target.dataset.index);
       render();
@@ -128,10 +140,12 @@ function render() {
   });
 }
 
+// when add book button is clicked run addBook function and render the apge
 addBookBtn.addEventListener("click", (e) => {
   e.preventDefault();
   addBook();
   render();
 });
 
+// run render function to display books on page
 render();
